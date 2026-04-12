@@ -1,7 +1,16 @@
-<p>
-  <img src="./profile/stats.svg" alt="GitHub Stats" width="400" />
-  <img src="./profile/top-langs.svg" alt="Top Languages" width="300" />
-</p>
+<!-- Stats 卡片 -->
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="./profile/stats-dark.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="./profile/stats-light.svg" />
+  <img alt="GitHub Stats" src="./profile/stats-light.svg" />
+</picture>
+
+<!-- Top Languages 卡片 -->
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="./profile/langs-dark.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="./profile/langs-light.svg" />
+  <img alt="Top Languages" src="./profile/langs-light.svg" />
+</picture>
 
 <table width="100%">
   <tr>
