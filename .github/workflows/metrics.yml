@@ -1,4 +1,5 @@
-name: Metrics
+name: Metrics & Stats
+
 on:
   schedule: [{cron: "0 0 * * *"}]
   workflow_dispatch:
@@ -10,22 +11,26 @@ jobs:
     permissions:
       contents: write
     steps:
+
+      # ──────────────────────────────────────────
+      # lowlighter/metrics 部分（自动提交到仓库根目录）
+      # ──────────────────────────────────────────
+
       # 1. 语言详细分析 (All-time)
       # - name: Languages
-      #  uses: lowlighter/metrics@latest
-      #  with:
-      #    filename: metrics.languages.indepth.svg
-      #    token: ${{ secrets.METRICS_TOKEN }}
-      #    base: ""
-      #    plugin_languages: yes
-      #    plugin_languages_ignored: "html, css" 
-      #    plugin_languages_indepth: yes
-      #    commits_authoring: LyaQanYi
-      #    plugin_languages_details: lines, percentage
-      #   ⚠️ 关键修改：强烈建议不要用 0 (无限制)，改成 8 到 12 之间的一个数字
-      #    plugin_languages_limit: 8 
-      #    repositories_forks: no
-      #    plugin_languages_analysis_timeout: 20
+      #   uses: lowlighter/metrics@latest
+      #   with:
+      #     filename: metrics.languages.indepth.svg
+      #     token: ${{ secrets.METRICS_TOKEN }}
+      #     base: ""
+      #     plugin_languages: yes
+      #     plugin_languages_ignored: "html, css"
+      #     plugin_languages_indepth: yes
+      #     commits_authoring: LyaQanYi
+      #     plugin_languages_details: lines, percentage
+      #     plugin_languages_limit: 8
+      #     repositories_forks: no
+      #     plugin_languages_analysis_timeout: 20
 
       # 2. 互动表情
       - name: Reactions
@@ -59,16 +64,16 @@ jobs:
           plugin_repositories: yes
           plugin_repositories_pinned: 6
 
-      # 5. WakaTime (需配置 WAKATIME_TOKEN)
-  #    - name: WakaTime
-  #      uses: lowlighter/metrics@latest
-  #      with:
-  #        filename: metrics.wakatime.svg
-  #        token: ${{ secrets.METRICS_TOKEN }}
-  #        base: ""
-  #        plugin_wakatime: yes
-  #        plugin_wakatime_token: ${{ secrets.WAKATIME_TOKEN }}
-  #        plugin_wakatime_days: 7
+      # 5. WakaTime（需配置 WAKATIME_TOKEN）
+      # - name: WakaTime
+      #   uses: lowlighter/metrics@latest
+      #   with:
+      #     filename: metrics.wakatime.svg
+      #     token: ${{ secrets.METRICS_TOKEN }}
+      #     base: ""
+      #     plugin_wakatime: yes
+      #     plugin_wakatime_token: ${{ secrets.WAKATIME_TOKEN }}
+      #     plugin_wakatime_days: 7
 
       # 6. 获得的 Star
       - name: Stars
@@ -81,7 +86,6 @@ jobs:
           plugin_stars_limit: 3
 
       # 7. 3D 提交日历
-      # 只能显示最近 365 天 (full-year)，无法精确裁剪到 6月，但 365天 肯定包含 6月。
       - name: Isometric Calendar
         uses: lowlighter/metrics@latest
         with:
@@ -89,12 +93,9 @@ jobs:
           token: ${{ secrets.METRICS_TOKEN }}
           base: ""
           plugin_isocalendar: yes
-          # 选项只有 full-year (365天) 或 half-year (180天)
-          # 选 full-year 可以覆盖到 2025年6月
           plugin_isocalendar_duration: half-year
 
       # 8. 全年普通日历
-      # 显示最近的 2 个年份 (2026 和 2025)
       - name: Calendar
         uses: lowlighter/metrics@latest
         with:
@@ -102,6 +103,85 @@ jobs:
           token: ${{ secrets.METRICS_TOKEN }}
           base: ""
           plugin_calendar: yes
-          # 限制为 2 年 (当前年 + 去年)
-          # 这样会显示 2025 和 2026 整年
           plugin_calendar_limit: 2
+
+      # ──────────────────────────────────────────
+      # github-readme-stats 部分（生成到 profile/ 目录）
+      # ──────────────────────────────────────────
+
+      # 需要先 checkout，metrics action 执行后工作区可能已更新
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # 拉取完整历史，避免 push 冲突
+          ref: ${{ github.ref }}
+
+      # 9. Stats 卡片 - 透明主题（浅色模式）
+      - name: Stats Card (Transparent)
+        uses: readme-tools/github-readme-stats-action@v1
+        with:
+          card: stats
+          options: >-
+            username=${{ github.repository_owner }}
+            &show_icons=true
+            &theme=transparent
+            &include_all_commits=true
+            &hide_border=true
+          path: profile/stats-light.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 10. Stats 卡片 - Ocean Dark 主题（深色模式）
+      - name: Stats Card (Ocean Dark)
+        uses: readme-tools/github-readme-stats-action@v1
+        with:
+          card: stats
+          options: >-
+            username=${{ github.repository_owner }}
+            &show_icons=true
+            &theme=ocean_dark
+            &include_all_commits=true
+            &hide_border=true
+          path: profile/stats-dark.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 11. Top Languages 卡片 - 透明主题（浅色模式）
+      - name: Top Languages (Transparent)
+        uses: readme-tools/github-readme-stats-action@v1
+        with:
+          card: top-langs
+          options: >-
+            username=${{ github.repository_owner }}
+            &layout=compact
+            &theme=transparent
+            &hide_border=true
+            &langs_count=8
+          path: profile/langs-light.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 12. Top Languages 卡片 - Ocean Dark 主题（深色模式）
+      - name: Top Languages (Ocean Dark)
+        uses: readme-tools/github-readme-stats-action@v1
+        with:
+          card: top-langs
+          options: >-
+            username=${{ github.repository_owner }}
+            &layout=compact
+            &theme=ocean_dark
+            &hide_border=true
+            &langs_count=8
+          path: profile/langs-dark.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 13. 统一提交 github-readme-stats 生成的 SVG
+      #     （metrics action 已自行处理了自己的提交，
+      #       这里只补提 profile/ 目录下的新文件）
+      - name: Commit Stats Cards
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase   # 拉取 metrics 刚推送的提交，避免冲突
+          git add profile/*.svg
+          # 如果没有变化则跳过，不报错退出
+          git diff --cached --quiet && echo "No changes, skipping commit." || \
+            git commit -m "chore: update github-readme-stats cards"
+          git push
