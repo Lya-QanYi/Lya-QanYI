@@ -33,14 +33,14 @@ jobs:
           plugin_languages_analysis_timeout: 30
 
       # 2. 互动表情
-      - name: Reactions
-        uses: lowlighter/metrics@latest
-        with:
-          filename: metrics.reactions.svg
-          token: ${{ secrets.METRICS_TOKEN }}
-          base: ""
-          plugin_reactions: yes
-          plugin_reactions_limit: 100
+      # - name: Reactions
+      #  uses: lowlighter/metrics@latest
+      #  with:
+      #    filename: metrics.reactions.svg
+      #    token: ${{ secrets.METRICS_TOKEN }}
+      #    base: ""
+      #    plugin_reactions: yes
+      #    plugin_reactions_limit: 100
 
       # 3. Issue/PR 跟进 (All-time, 包含归档)
       - name: Followup
