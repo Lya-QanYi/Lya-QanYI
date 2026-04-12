@@ -5,13 +5,6 @@
   <img alt="GitHub Stats" src="./profile/stats-light.svg" />
 </picture>
 
-<!-- Top Languages 卡片 -->
-<picture>
-  <source media="(prefers-color-scheme: dark)"  srcset="./profile/langs-dark.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="./profile/langs-light.svg" />
-  <img alt="Top Languages" src="./profile/langs-light.svg" />
-</picture>
-
 <table width="100%">
   <tr>
     <td width="50%" valign="top">
