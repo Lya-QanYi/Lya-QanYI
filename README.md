@@ -1,3 +1,8 @@
+<p>
+  <img src="./profile/stats.svg" alt="GitHub Stats" width="400" />
+  <img src="./profile/top-langs.svg" alt="Top Languages" width="300" />
+</p>
+
 <table width="100%">
   <tr>
     <td width="50%" valign="top">
