@@ -13,24 +13,24 @@ jobs:
     steps:
 
       # ──────────────────────────────────────────
-      # lowlighter/metrics 部分（自动提交到仓库根目录）
+      # lowlighter/metrics 部分
       # ──────────────────────────────────────────
 
-      # 1. 语言详细分析 (All-time)
-      # - name: Languages
-      #   uses: lowlighter/metrics@latest
-      #   with:
-      #     filename: metrics.languages.indepth.svg
-      #     token: ${{ secrets.METRICS_TOKEN }}
-      #     base: ""
-      #     plugin_languages: yes
-      #     plugin_languages_ignored: "html, css"
-      #     plugin_languages_indepth: yes
-      #     commits_authoring: LyaQanYi
-      #     plugin_languages_details: lines, percentage
-      #     plugin_languages_limit: 8
-      #     repositories_forks: no
-      #     plugin_languages_analysis_timeout: 20
+      # 1. 语言深度分析（含贡献到他人仓库的 commit）
+      - name: Languages
+        uses: lowlighter/metrics@latest
+        with:
+          filename: metrics.languages.indepth.svg
+          token: ${{ secrets.METRICS_TOKEN }}
+          base: ""
+          plugin_languages: yes
+          plugin_languages_ignored: "html, css"
+          plugin_languages_indepth: yes
+          commits_authoring: ${{ github.repository_owner }}
+          plugin_languages_details: lines, percentage
+          plugin_languages_limit: 8
+          repositories_forks: yes
+          plugin_languages_analysis_timeout: 30
 
       # 2. 互动表情
       - name: Reactions
@@ -106,14 +106,14 @@ jobs:
           plugin_calendar_limit: 2
 
       # ──────────────────────────────────────────
-      # github-readme-stats 部分（生成到 profile/ 目录）
+      # github-readme-stats 部分
       # ──────────────────────────────────────────
 
-      # 需要先 checkout，metrics action 执行后工作区可能已更新
+      # metrics 推送后重新同步，避免后续 push 冲突
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # 拉取完整历史，避免 push 冲突
+          fetch-depth: 0
           ref: ${{ github.ref }}
 
       # 9. Stats 卡片 - 透明主题（浅色模式）
@@ -153,15 +153,12 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # 13. 统一提交 github-readme-stats 生成的 SVG
-      #     （metrics action 已自行处理了自己的提交，
-      #       这里只补提 profile/ 目录下的新文件）
       - name: Commit Stats Cards
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase   # 拉取 metrics 刚推送的提交，避免冲突
+          git pull --rebase
           git add profile/*.svg
-          # 如果没有变化则跳过，不报错退出
           git diff --cached --quiet && echo "No changes, skipping commit." || \
             git commit -m "chore: update github-readme-stats cards"
           git push
