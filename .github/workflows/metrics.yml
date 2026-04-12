@@ -152,12 +152,14 @@ jobs:
           path: profile/langs-dark.svg
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 13. 统一提交 github-readme-stats 生成的 SVG
+     # 13. 统一提交 github-readme-stats 生成的 SVG
       - name: Commit Stats Cards
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase
+          git stash                          # 先把未暂存的 SVG 暂存起来
+          git pull --rebase                  # 拉取 metrics 推送的新提交
+          git stash pop                      # 还原 SVG 文件到工作区
           git add profile/*.svg
           git diff --cached --quiet && echo "No changes, skipping commit." || \
             git commit -m "chore: update github-readme-stats cards"
