@@ -2,35 +2,66 @@ name: Update GitHub Stats Cards
 
 on:
   schedule:
-    - cron: "0 3 * * *"   # 每天凌晨 3 点自动更新
-  workflow_dispatch:         # 允许手动触发
+    - cron: "0 3 * * *"
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # 允许推送提交
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate Stats Card (Transparent)
-        uses: readme-tools/github-readme-stats-action@v1
-        with:
-          card: stats
-          options: username=${{ github.repository_owner }}&show_icons=true&theme=transparent&include_all_commits=true
-          path: profile/stats.svg
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create output directory
+        run: mkdir -p profile
 
-      - name: Generate Top Languages Card (Transparent)
-        uses: readme-tools/github-readme-stats-action@v1
-        with:
-          card: top-langs
-          options: username=${{ github.repository_owner }}&layout=compact&theme=transparent
-          path: profile/langs.svg
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Commit & Push Cards
+      - name: Download Stats Card (Ocean Dark)
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@users.noreply.github.com"
-          git add profile/*.svg
-          git commit -m "chore: update README stats cards" || exit 0
+          curl -s "https://github-readme-stats.vercel.app/api\
+          ?username=LyaQanYi\
+          &show_icons=true\
+          &theme=ocean_dark\
+          &include_all_commits=true\
+          &hide_border=true" \
+          -o profile/stats.svg
+
+      - name: Download Stats Card (Transparent)
+        run: |
+          curl -s "https://github-readme-stats.vercel.app/api\
+          ?username=LyaQanYi\
+          &show_icons=true\
+          &theme=transparent\
+          &include_all_commits=true\
+          &hide_border=true" \
+          -o profile/stats-light.svg
+
+      - name: Download Top Languages Card (Ocean Dark)
+        run: |
+          curl -s "https://github-readme-stats.vercel.app/api/top-langs\
+          ?username=LyaQanYi\
+          &layout=compact\
+          &theme=ocean_dark\
+          &hide_border=true" \
+          -o profile/langs.svg
+
+      - name: Verify files are valid SVG (not error pages)
+        run: |
+          for f in profile/*.svg; do
+            if ! grep -q "<svg" "$f"; then
+              echo "ERROR: $f is not a valid SVG"
+              cat "$f"
+              exit 1
+            fi
+          done
+          echo "All SVGs look valid ✅"
+
+      - name: Commit & Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add profile/
+          git diff --cached --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "chore: update stats cards [skip ci]"
           git push
