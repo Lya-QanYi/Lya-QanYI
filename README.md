@@ -11,7 +11,7 @@
       <img src="./metrics.followup.indepth.svg" alt="Followup">
     </td>
     <td width="50%" valign="top">
-      <img src="./metrics.reactions.svg" alt="Reactions">
+      <img src="./metrics.languages.indepth.svg" alt="Reactions">
     </td>
   </tr>
 
