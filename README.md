@@ -14,7 +14,16 @@
       <img src="./metrics.languages.indepth.svg" alt="Reactions">
     </td>
   </tr>
-
+  
+  <tr>
+    <td valign="top">
+      <img src="./metrics.wakatime.svg" alt="Isometric Calendar">
+    </td>
+    <td valign="top">
+      <img src="./metrics.reactions.svg" alt="Full Calendar">
+    </td>
+  </tr>
+  
   <tr>
     <td valign="top">
       <img src="./metrics.repositories.pinned.svg" alt="Pinned Repositories">
