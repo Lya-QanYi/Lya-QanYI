@@ -17,6 +17,15 @@
   
   <tr>
     <td valign="top">
+      <img src="./metrics.isocalendar.fullyear.svg" alt="Isometric Calendar">
+    </td>
+    <td valign="top">
+      <img src="./metrics.calendar.full.svg" alt="Full Calendar">
+    </td>
+  </tr>
+  
+  <tr>
+    <td valign="top">
       <img src="./metrics.wakatime.svg" alt="Isometric Calendar">
     </td>
     <td valign="top">
@@ -30,15 +39,6 @@
     </td>
     <td valign="top">
       <img src="./metrics.stars.svg" alt="Stars">
-    </td>
-  </tr>
-
-  <tr>
-    <td valign="top">
-      <img src="./metrics.isocalendar.fullyear.svg" alt="Isometric Calendar">
-    </td>
-    <td valign="top">
-      <img src="./metrics.calendar.full.svg" alt="Full Calendar">
     </td>
   </tr>
 </table>
